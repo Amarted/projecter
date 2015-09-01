@@ -1,0 +1,26 @@
+nav li {
+	display: inline-block;
+	list-style: none;
+	padding: 5px;
+}
+nav li a { 
+	text-decoration: none;
+	color: navy;
+}
+nav li a:hover { 
+	text-decoration: underline;
+	color: blue;
+}
+
+.description {
+	color: #333;
+}
+.entity .name a {
+	text-decoration: none;
+}
+
+
+.entity .name a:hover {
+	
+	text-decoration: underline;
+}

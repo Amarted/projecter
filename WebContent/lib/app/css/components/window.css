@@ -1,0 +1,32 @@
+
+.window {
+	border: 1px solid lightgray;
+	padding: 0 10px 5px;
+    box-shadow: 2px 2px 7px gray;
+}
+
+.window .title {
+	font-size: 16px;
+	padding: 5px 0;
+	margin-bottom: 10px;
+	border-bottom: 1px solid lightgray;
+}
+
+.window .controls {
+	padding-top: 5px;
+	margin-top: 5px;
+	border-top: 1px solid lightgray;
+}
+
+.window .input lable {
+    width: 160px;
+    display: inline-block;
+}
+
+.window .input {
+	margin-bottom: 5px;
+}
+
+.window .input input {
+	height: 20px;
+}
