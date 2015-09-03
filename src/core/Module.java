@@ -79,6 +79,8 @@ public class Module extends HttpServlet implements Servlet {
 	
 	protected void render( String viewFile, Map<String, Object> params ){
 		try {
+			// Set view base path
+			request.setAttribute( "appBase", Settings.appBase );			
 			// Set view file
 			request.setAttribute( "viewFile", viewFile );
 			// Set params

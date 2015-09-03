@@ -6,7 +6,5 @@ package core;
  */
 public class Settings {
 	/** App base path*/
-	//public static String appBase = "/";
-	/** Main app layout */
-	//public static String layout = "/layout/main.jsp";
+	public static String appBase = "/Projecter.local/";
 }
