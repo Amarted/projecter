@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <table>
 	<thead>
 		<tr>
@@ -11,14 +12,15 @@
 	<tbody>
 		
 		<c:forEach items="${projects}" var="project">
-			<tr class="entity">
+			<tr class="entity project">
 				<td class="name"><a href="${appBase}tasks?project=${project.id}">${project.name}</a></td>
 				<td class="description">${project.description}</td>	
 				<td class="controls">
-					<form action="${appBase}projects?action=delete" method="post">
+					<div class="data">
 						<input type="hidden" name="id" value="${project.id}" />
-						<button onclick="return confirm('Удалить проект?')" type="submit">X</button>
-					</form>
+					</div>
+					<button class="edit" title="Редактировать">Редактировать</button>
+					<button class="delete" type="submit" title="Удалить">X</button>					
 				</td>			
 			</tr>
 		</c:forEach>
@@ -28,3 +30,4 @@
 <button>Создать проект</button>
 
 <jsp:include page="project-form.jsp" />	
+<script src="${appBase}lib/js/projects.page.js"></script>
