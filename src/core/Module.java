@@ -101,7 +101,16 @@ public class Module extends HttpServlet implements Servlet {
 		Map<String, Object> params = new HashMap<>();
 		render( viewFile, params );		
 	}
-
+	
+	protected void response( String responseString ) {
+		try {
+			response.getWriter().write( responseString );
+		} catch (IOException e) {
+			sendError( HttpServletResponse.SC_NOT_FOUND, "IO error " + e.getMessage() );
+			core.App.log(e);
+		}
+	}
+	
 	protected void redirect( String url ) {
 		try {
 			response.sendRedirect( url );
@@ -132,7 +141,7 @@ public class Module extends HttpServlet implements Servlet {
 		}
 	}
 	
-	public String getRequestParam( String paramName ) {
+	protected String getRequestParam( String paramName ) {
 		String param = null;
 		try {
 			// Get and convert request parameter to UTF-8
@@ -143,7 +152,7 @@ public class Module extends HttpServlet implements Servlet {
 		return param;
 	}
 	
-	public int getIntRequestParam( String paramName ) throws NumberFormatException  {		
+	protected int getIntRequestParam( String paramName ) throws NumberFormatException  {		
 		// Get and convert request parameter to UTF-8
 		String stringParam = null;
 		try {
@@ -153,6 +162,10 @@ public class Module extends HttpServlet implements Servlet {
 		}			
 		int param = Integer.parseInt(stringParam);
 		return param;		
+	}
+	
+	protected void setJsonResponse() {
+		response.setContentType("application/json");
 	}
 	
 }
