@@ -1,74 +1,85 @@
+/**
+ * Class to work with form.
+ */
+
 App.Class.Form = function( selector ) {
+	
 	var _ = this;
-	_selector = selector;
-	_window = $( '.window' + _selector );
 	
-	_.Show = function() {
-		_window.show();		
+	_.element = null;
+	_.validator = null;
+	
+	_.Init = function() {
+		// Check parameters
+		if ( ! selector ) {
+			console.log( "Неверные параметры" );
+			return null;
+		}
+		// Get form container
+		_.element = $( selector );
+		if ( ! _.element.length ) {
+			console.log( "Не найдена форма" );
+			return null;
+		}
+		
+		// Run user configuration
+		_.Configure();
+		
+		// Create validator if was not set yet
+		if ( _.validator === null ) {
+			_.validator = _.element.validate();
+		}
 	};
-	_.Hide = function() {
-		_window.hide();		
-	};	
 	
+	// Override this method to configure
+	_.Configure = function() {}
 	
+	/** 
+	 * Data methods
+	 */
 	
-	
-	// TODO Refactoring
-	
-	
+	// Reset form
 	_.Reset = function() {
 		/** Clear data, reset messages and indicators  */
-		$( _window )
-			.find( ':input:not(button):not(:checkbox)' ).val('').end()
-			.find( 'input[type="checkbox"]' ).prop( 'checked', false ).end()
-			.find( 'label.error' ).remove().end()
-			.find( '.form-control.error' ).removeClass( 'error' ).end()
-			.trigger( 'form.reset' );		
-	};
-	/** Set data to  form */
-	_.SetData = function( data ) {
-		// Fill form
-		for ( var inputName in data ) {	
-			/** Set object properties values to correspond form inputs */
-			var inputValue = data[ inputName ];
-			var input = form.find( ':input[name="' + inputName + '"]' );
-			if ( input.attr( 'type' ) == 'checkbox' ) {
-				if ( inputValue == 0 ) {
-					input.prop( 'checked', false );
-				} else {					
-					input.prop( 'checked', true );
-				}
-			} else if ( input.prop( 'tagName' ) == 'SELECT' ) {
-				/** Set value only if this value is exists in select's options */
-				var existVals = []
-				input.find('option').each( function( index, element ) {
-					existVals.push( $( element ).val() );
-				})
-				
-				// Convert any value to string
-				if( typeof inputValue.toString === 'function') {
-					inputValue = inputValue.toString();
-				}
-				// Find value
-				if ( existVals.indexOf( inputValue ) !== -1 ) {
-					input.val( inputValue );
-				}
-				
-			} else {
-				input.val(inputValue);
-			}
-		}
-		$( _window ).trigger( 'form.setData' );
+		_.element
+			.find(':input:not(button):not(:checkbox)').val('').end()
+			.find('input[type="checkbox"]').prop('checked', false).end()
+			.find('label.error').remove().end()
+			.find('.form-control.error').removeClass('error').end()
+			.find('.alert').hide().end()
+			.trigger('reset.Form');		
 	};
 	
-	/** Get data from modal form */
+	// Set data to modal form 
+	_.SetData = function( data ) {
+		for ( var propName in data ) {	
+			/** Set object ptoperties values to correspond form inputs */
+			var inputValue = data[ propName ];
+			var input = _.element.find(':input[name="' + propName + '"]');
+			if ( input.attr('type') == 'checkbox' ) {
+				// Checkbox input
+				_setCheckboxValue( input, inputValue );
+			} else if ( input.prop( 'tagName' ) == 'SELECT' ) {
+				// Select input
+				_setSelectValue( input, inputValue );				
+			} else {
+				// Normal input
+				input.val( inputValue );
+			}
+		}
+	};
+	// Get data from modal form
 	_.GetData = function() {
 		var data = {}
 		var name = '';
 		var value = '';
-		$.each( _window.find( ':input:not(button)' ), function( index, element ) {
-			name = $( element ).attr('name');
-			
+		$.each( _.element.find( ':input:not(button)' ), function( index, element ) {
+			/** Get property name, clear data class name if exists */
+			if ( _.dataClassName == '' ) {
+				name = $( element ).attr('name');
+			} else {
+				name = $( element ).attr('name').replace(new RegExp(_.dataClassName + '\\[(.*)\\]'), '$1');
+			}
 			if ( $( element ).attr( 'type' ) == 'checkbox' ) {
 				if ( $( element ).is( ':checked' )) {
 					value = $( element ).val();
@@ -85,42 +96,29 @@ App.Class.Form = function( selector ) {
 		return data;
 	};
 	
-	
-	_.Submit = function(formElement) {
-		var formData = _.GetData();
-		$.post(_.baseUrl + '/' + _.submitAction, formData).done(function(data){
-			/** Check for errors */
-			if(typeof data.errors == 'undefined') {
-				App.ShowMessage('Данные успешно сохранены', 'success', '.app-alert-place');
-				_.Hide();	
-				$(_window).trigger('afterSave.Form', [data, formData]);			
-				
-			} else {
-				/** Show errors */				
-				var validatorErrors = {};
-				var fieldName = '';
-				var errorsDetected = false;
-				if( typeof data.errors !== 'string' ) {
-					for(var field in data.errors) {
-						console.log(field)
-						errorsDetected = true;
-						if(_.dataClassName != '') {
-							fieldName = _.dataClassName  + '[' + field + ']'
-						} else {
-							fieldName = field;
-						}
-						validatorErrors[fieldName] = data.errors[field];
-					}
-				}
-				if( errorsDetected ) {
-					$(_window).data('validator').showErrors(validatorErrors);
-				} else {
-					App.ShowMessage('Ошибка при сохранении данных', 'danger', '.modal .alert-place');
-				}
-			}
-		}).fail(function(){
-			App.ShowMessage('Ошибка при сохранении данных', 'danger', '.modal .alert-place');
-		});	
-		return false;
+	/** Private interface */
+	_setCheckboxValue = function( input, value ) {
+		if ( value == 0 ) {
+			input.prop( 'checked', false );
+		} else {					
+			input.prop( 'checked', true );
+		}
 	}
+	_setSelectValue = function( input, value ) {
+		/** Set value only if this value is exists in select's options */
+		var existVals = []
+		input.find( 'option' ).each( function( index, element ) {
+			existVals.push( $( element ).val() );
+		})
+		// Conver to string if not string
+		if ( typeof inputValue.toString === 'function' ) {
+			value = value.toString();
+		}
+		// Set value if it ound
+		if ( existVals.indexOf( value ) !== -1 ) {
+			input.val( value );
+		}
+	}
+	
+	return _;
 }
