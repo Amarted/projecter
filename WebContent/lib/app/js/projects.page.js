@@ -6,12 +6,20 @@ var buttons = {
 var editForm = new App.Class.Form( '#editEntity' );
 
 buttons.deleteEntity.on( "click", function( event ) {
+	if ( ! confirm( "Удалить проект? Вы сможете восстановить его на странице архива." )) {
+		return;
+	}
 	var entityRow = $( event.target ).parents( "tr" );
-	var id = entityRow.find( ".data .id" );
+	var idInput = entityRow.find( ".data .id" );
+	if ( ! idInput.length ) {
+		console.log("Неверные данные");
+		return;
+	}
 	var data = {
-		id: id
+		action: "delete",
+		id: idInput.val()
 	};
-	App.Request( "/projects/delete", data, "post" ).done( function() {
+	App.Request( "projects", data, "post" ).done( function() {
 		entityRow.remove();
 	});
 });
@@ -22,7 +30,7 @@ buttons.editEntity.on( "click", function( event ) {
 	var data = {
 		project: project
 	};
-	App.Request( "/projects/save", data, "post" ).done( function() {
+	App.Request( "/projects?action=delete", data, "post" ).done( function() {
 		entityRow.remove();
 	});
 });

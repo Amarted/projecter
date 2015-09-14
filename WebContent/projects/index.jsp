@@ -17,7 +17,7 @@
 				<td class="description">${project.description}</td>	
 				<td class="controls">
 					<div class="data">
-						<input type="hidden" name="id" value="${project.id}" />
+						<input class="id" type="hidden" name="id" value="${project.id}" />
 					</div>
 					<button class="edit" title="Редактировать">Редактировать</button>
 					<button class="delete" type="submit" title="Удалить">X</button>					
@@ -30,4 +30,4 @@
 <button>Создать проект</button>
 
 <jsp:include page="project-form.jsp" />	
-<script src="${appBase}lib/js/projects.page.js"></script>
+<script src="${appBase}lib/app/js/projects.page.js"></script>
