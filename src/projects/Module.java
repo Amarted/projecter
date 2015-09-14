@@ -53,10 +53,11 @@ public class Module extends core.Module {
 	 * Delete specified project
 	 */
 	public void actionPostDelete() {
+		setJsonResponse();
 		int id = Integer.parseInt( getRequestParam( "id" ));
 		try {
 			Source.deleteProject( id );
-			response.sendRedirect( "projects" );
+			response("{\"status\":\"ok\"}");
 		} catch ( Exception e ) {
 			sendError( e );
 		}
