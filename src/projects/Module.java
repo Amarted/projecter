@@ -54,12 +54,12 @@ public class Module extends core.Module {
 	 */
 	public void actionPostDelete() {
 		setJsonResponse();
-		int id = Integer.parseInt( getRequestParam( "id" ));
+		int id = getIntRequestParam( "id" );
 		try {
 			Source.deleteProject( id );
 			response("{\"status\":\"ok\"}");
 		} catch ( Exception e ) {
-			sendError( e );
+			response("{\"status\":\"error\", \"message\":\"" + e.getMessage() + "\"}");
 		}
 	}
 }

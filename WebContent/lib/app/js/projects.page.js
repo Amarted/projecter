@@ -19,8 +19,19 @@ buttons.deleteEntity.on( "click", function( event ) {
 		action: "delete",
 		id: idInput.val()
 	};
-	App.Request( "projects", data, "post" ).done( function() {
-		entityRow.remove();
+	App.Request( "projects", data, "post" ).done( function( response ) {
+		if ( ! response.status ) {
+			alert( "Неверный ответ сервера" )
+			return;
+		}
+		if (  response.status == "ok" ) {
+			// remove row from UI
+			entityRow.remove();
+		} else if ( response.status == "error") {	
+			// Show error message
+			var errorMessage = response.message ? response.message : "Неизвестная ошибка";
+			alert( errorMessage );			
+		}
 	});
 });
 

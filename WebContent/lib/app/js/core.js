@@ -8,7 +8,7 @@ var AppClass = function() {
 			data: data || {},
 			method: method || 'GET',
 			success: function( data, textStatus, jqXHR ) {
-				// TODO
+				// TODO auto show errors
 			},
 			error: function( jqXHR, textStatus, errorText ) {
 				if ( textStatus == 'abort' ) {
