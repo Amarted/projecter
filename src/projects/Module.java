@@ -59,7 +59,7 @@ public class Module extends core.Module {
 			Source.deleteProject( id );
 			response("{\"status\":\"ok\"}");
 		} catch ( Exception e ) {
-			sendError( e );
+			response("{\"status\":\"error\", \"message\":\"" + e.getMessage() + "\"}");
 		}
 	}
 }
