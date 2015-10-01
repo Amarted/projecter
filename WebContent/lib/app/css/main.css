@@ -24,3 +24,7 @@ nav li a:hover {
 	
 	text-decoration: underline;
 }
+
+.window.hide {
+	display: none;
+}
