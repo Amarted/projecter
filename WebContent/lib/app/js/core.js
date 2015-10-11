@@ -1,5 +1,6 @@
 var AppClass = function() {
 	var _ = this;
+	_.Base = "/Projecter.local/";
 	_.Class = {};
 	_.Request = function( url, data, method ) {
 		return $.ajax({
@@ -8,9 +9,12 @@ var AppClass = function() {
 			data: data || {},
 			method: method || 'GET',
 			success: function( data, textStatus, jqXHR ) {
-				if ( data.error && _.autoErrors ) {
+				// Handle errors
+				if ( ! data.status ) {
+					_.ShowMessage( "Неверный ответ сервера", 'error', '.app-error-place', false );					
+				} else if ( data.status == "error" && _.autoErrors ) {
 					// Show error message
-					_.ShowMessage( data.error, 'error', '.app-error-place', false );
+					_.ShowMessage( data.message, 'error', '.app-error-place', false );
 				}
 			},
 			error: function( jqXHR, textStatus, errorText ) {
