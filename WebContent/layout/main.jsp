@@ -6,6 +6,7 @@
 	<meta charset="UTF-8">
 	<title>Projecter</title>
 	<link rel="stylesheet" type="text/css" href="${appBase}lib/app/css/main.css" />
+	<link rel="stylesheet" type="text/css" href="${appBase}lib/third/bootstrap/css/glyphicons.css" />
 	<link rel="stylesheet" type="text/css" href="${appBase}lib/app/css/components/window.css" />
 </head>
 

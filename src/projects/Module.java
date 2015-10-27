@@ -34,6 +34,17 @@ public class Module extends core.Module {
 		render( "projects/index.jsp", params );
 	}
 	
+	public void actionGetGetall() {
+		setJsonResponse();
+		List<Project> projects = null;
+		try {
+			projects = Source.getProjects();
+			ajaxResponse( "ok",  projects);
+		} catch ( Exception e ) {
+			ajaxResponse( "error", e.getMessage() );
+		}
+	}
+	
 	/**
 	 * Create new project
 	 */
