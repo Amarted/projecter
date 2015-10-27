@@ -78,7 +78,6 @@ App.Class.Window = function( id, fromTemplate ) {
 	/** Set body, footer and other modal elements */
 	_SetControls = function( id ) {
 		_element = $( id );
-		console.log(_element)
 		_head = _element.find( '.head' );
 		_title = _head.find( '.title' );
 		_body = _element.find( '.body' );

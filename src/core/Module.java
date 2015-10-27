@@ -6,6 +6,7 @@ package core;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -104,6 +105,7 @@ public class Module extends HttpServlet implements Servlet {
 	
 	protected void response( String responseString ) {
 		try {
+			// TODO sending russian encoding
 			response.getWriter().write( responseString );
 		} catch (IOException e) {
 			sendError( HttpServletResponse.SC_NOT_FOUND, "IO error " + e.getMessage() );
@@ -141,26 +143,86 @@ public class Module extends HttpServlet implements Servlet {
 		}
 	}
 	
+	protected void ajaxResponse( String status, Object data ) {
+		/**
+		 * Formate json string from object
+		 * For this get all object fields and join they as "name":"value" pairs
+		 */
+		String objectJson = "";
+		Field[] fields = data.getClass().getDeclaredFields();
+		int fieldsLength = fields.length;
+		for ( int i = 0; i < fieldsLength; i++ ) {
+			Field field = fields[i];
+			// Set to public acess
+		    field.setAccessible(true);
+		    Object value;
+			try {
+				value = field.get(data);
+				if (value != null) {
+					// Replace prefix if exists
+					String fieldName = field.getName();
+					if ( fieldName.startsWith("_") ) {
+						fieldName = fieldName.replaceFirst("_", "");
+					}
+			    	objectJson += "\"" + fieldName + "\":" + "\"" + value + "\", ";
+			    	
+			    }
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				sendError(e);
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				sendError(e);
+			} 
+		    
+		}
+		// Remove last comma and space
+		objectJson = objectJson.replaceAll(", $","");
+		
+		// TODO escape quotes for json
+		
+		String json = "{\"status\":\"" + status + "\", " + "\"data\":{" + objectJson + "}}";		
+		response(json);
+	}
+	
+	protected void ajaxResponse( String status, String message ) {
+		// TODO escape quotes for json
+		String json = "{\"status\":\"" + status + "\", \"message\":\"" + message + "\"}";		
+		response(json);
+	}
+	
+	protected void ajaxResponse( String status ) {
+		// TODO escape quotes for json
+		String json = "{\"status\":\"" + status + "\"}";		
+		response(json);
+	}
+	
 	protected String getRequestParam( String paramName ) {
 		String param = null;
 		try {
 			// Get and convert request parameter to UTF-8
-			param = new String( request.getParameter( paramName ).getBytes( "iso-8859-1" ), "UTF-8" );
+			
+			param = request.getParameter( paramName );
+			String encoding = request.getCharacterEncoding();
+			if ( encoding != "UTF-8") {
+				param = new String( param.getBytes( request.getCharacterEncoding() ), "UTF-8" );
+			}
 		} catch (UnsupportedEncodingException e) {
 			core.App.log(e);
 		}
 		return param;
 	}
 	
-	protected int getIntRequestParam( String paramName ) throws NumberFormatException  {		
+	protected int getIntRequestParam( String paramName ) {		
 		// Get and convert request parameter to UTF-8
 		String stringParam = null;
+		Integer param = null;
 		try {
 			stringParam = new String( request.getParameter( paramName ).getBytes( "iso-8859-1" ), "UTF-8" );
-		} catch (UnsupportedEncodingException e) {
+			param = Integer.parseInt(stringParam);
+		} catch (UnsupportedEncodingException | NumberFormatException e) {
 			core.App.log(e);
 		}			
-		int param = Integer.parseInt(stringParam);
 		return param;		
 	}
 	

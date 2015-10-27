@@ -46,7 +46,11 @@ App.Class.Structure = function( structElem, fields ) {
 						fieldElem.val( value );
 					}
 					break;
-				
+					
+				case "TEXTAREA":
+					fieldElem.val( value );
+					break;
+			
 				case "SELECT":
 					_setSelectValue( fieldElem, value );
 					break;
@@ -66,6 +70,7 @@ App.Class.Structure = function( structElem, fields ) {
 		switch ( tagName ) {
 			case "INPUT":
 			case "SELECT":
+			case "TEXTAREA":
 				value = fieldElem.val();					
 				break;
 			

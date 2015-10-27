@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<table>
+<table id="projects">
 	<thead>
 		<tr>
 			<th>Название</th>
@@ -9,11 +9,11 @@
 			<th></th>
 		</tr>
 	</thead>
-	<tbody>
+	<tbody class="list">
 		
 		<c:forEach items="${projects}" var="project">
 			<tr class="entity project">
-				<td class="name"><a href="${appBase}tasks?project=${project.id}">${project.name}</a></td>
+				<td><a class="name" href="${appBase}tasks?project=${project.id}">${project.name}</a></td>
 				<td class="description">${project.description}</td>	
 				<td class="controls">
 					<div class="data">

@@ -38,15 +38,36 @@ public class Module extends core.Module {
 	 * Create new project
 	 */
 	public void actionPostCreate() {
+		setJsonResponse();
 		try {
 			Project newProject = new Project();
-			newProject.setName( getRequestParam( "name" ));
-			newProject.setDescription( getRequestParam( "description" ));		
-			Source.createProject( newProject );
-			response.sendRedirect( "projects" );
+			newProject.setName( getRequestParam( "project[name]" ));
+			newProject.setDescription( getRequestParam( "project[description]" ));		
+			int id = Source.createProject( newProject );
+			// Set new id
+			newProject.setId(id);
+			ajaxResponse( "ok",  newProject);
 		} catch ( Exception e ) {
-			sendError( e );
+			ajaxResponse( "error", e.getMessage() );
 		}
+
+	}
+	
+	/**
+	 * Create new project
+	 */
+	public void actionPostSave() {
+		setJsonResponse();
+		try {
+			Project newProject = Source.getProject(getIntRequestParam( "project[id]" ));
+			newProject.setName( getRequestParam( "project[name]" ));
+			newProject.setDescription( getRequestParam( "project[description]" ));		
+			Source.saveProject( newProject );
+			ajaxResponse( "ok",  newProject);
+		} catch ( Exception e ) {
+			ajaxResponse( "error", e.getMessage() );
+		}
+
 	}
 	
 	/**
@@ -57,9 +78,9 @@ public class Module extends core.Module {
 		int id = getIntRequestParam( "id" );
 		try {
 			Source.deleteProject( id );
-			response("{\"status\":\"ok\"}");
+			ajaxResponse( "ok" );
 		} catch ( Exception e ) {
-			response("{\"status\":\"error\", \"message\":\"" + e.getMessage() + "\"}");
+			ajaxResponse( "error", e.getMessage() );
 		}
 	}
 }

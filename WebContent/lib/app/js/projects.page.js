@@ -7,7 +7,7 @@ var clearProjectData = { id: null, name: "", description: "" };
 var editWindow = new App.Class.Window( "editProject", true );
 var projectsList = { 
 	element: $( "#projects .list" ),
-	editedRow: null
+	currentRow: null
 	};
 
 
@@ -20,8 +20,8 @@ projectsList.Add = function( project ) {
 	 * TODO create row in UI
 	 */
 	var templ = '<tr class="entity project">';
-	templ += '	<td class="name"><a href="' + App.Base + 'tasks?project=' + project.id + '">' + project.name + '</a></td>';
-	templ += '	<td class="description">' + project.name + '</td>';
+	templ += '	<td><a class="name" href="' + App.Base + 'tasks?project=' + project.id + '">' + project.name + '</a></td>';
+	templ += '	<td class="description">' + project.description + '</td>';
 	templ += '	<td class="controls">';
 	templ += '	<div class="data">';
 	templ += '		<input class="id" type="hidden" name="id" value="' + project.id + '" />';
@@ -31,14 +31,14 @@ projectsList.Add = function( project ) {
 	templ += '	</td>';
 	templ += '</tr>';
 	var row = $( templ );
-	projectsList.element.append( row );
+	projectsList.element.append( templ );
 	return row;
 }
 /**
  * Update edited row by new data
  */
 projectsList.UpdateEdited = function( newData ) {
-	var project = new App.Class.Structure( projectsList.editedRow, projectFields );
+	var project = new App.Class.Structure( projectsList.currentRow, projectFields );
 	project.SetAllData( newData );
 }
 /**
@@ -79,15 +79,16 @@ projectsList.Load = function( filter ) {
 
 
 editWindow.form = { 
-	element: $("#editProject"),
+	container: $("#editProject"),
 	statuses: {
 		CREATE: "create",
 		EDIT: "edit"
 	}
 };
+editWindow.form.element =  editWindow.form.container.find("form");
 editWindow.form.status = editWindow.form.statuses.CREATE;
 editWindow.form.buttons = {
-	submit: editWindow.form.element.find(".controls .submit")
+	submit: editWindow.form.container.find(".controls .submit")
 }
 editWindow.form.data = new App.Class.Structure($("#editProject form") , projectFields);
 
@@ -96,24 +97,29 @@ editWindow.form.Submit = function() {
 	
 	var project = editWindow.form.data.GetAllData();
 	 
-	if ( editWindow.form.status ===  editWindow.form.statuses.CREATE ) {
+	if ( editWindow.form.status ===  editWindow.form.statuses.CREATE ) {		
 		editWindow.form.Create( project );
 	} else if ( editWindow.form.status ===  editWindow.form.statuses.EDIT ) {
 		editWindow.form.Save( project );
 	}
+	return false;
 }
 /** Create new project */
 editWindow.form.Create = function( project ) {
+	
 	var data = {
 			action: "create",
 			project: project
 		};
 	/**
-	 * TODO Server handling
+	 * @todo Fix: .done method is not working. But .always is works, why?
 	 */
-	return App.Request( "projects", project, "POST" ).done( function( response ){ 
+	App.Request( "projects", data, "POST" ).always( function( response ){ 
+		console.log(2, response.status)
 		if ( response.status == "error" ) return;
 		// Add to UI
+		console.log(3,response)
+		project.id = response.data.id
 		projectsList.Add( project );
 	});
 }
@@ -124,14 +130,13 @@ editWindow.form.Save = function( project ) {
 			action: "save",
 			project: project
 		};
-	/**
-	 * TODO Server handling
-	 */
-	return App.Request( "projects", project, "POST" ).done( function( response ) { 
+	App.Request( "projects", data, "POST" ).always( function( response ) { 
 		if ( response.status == "error" ) return;
 		projectsList.UpdateEdited( project );
 	});
 }
+
+// EVENTS
 
 // Creating project
 $( "#create").on( "click", function( event ) {
@@ -146,7 +151,7 @@ $( "#create").on( "click", function( event ) {
 })
 
 // Operations
-$( ".entity")	
+$( "#projects .list")	
 	// Edit project
 	.on( "click", ".edit", function( event ) {	
 		var entityRow = $( event.target ).parents( "tr" );	 
@@ -156,7 +161,7 @@ $( ".entity")
 		editWindow.SetTitle("Редактирование проекта");
 		editWindow.form.buttons.submit.text( "Сохранить" );
 		editWindow.form.status = editWindow.form.statuses.EDIT;
-		
+		projectsList.currentRow = entityRow;
 		editWindow.Show();
 	})
 	// Delete project
@@ -169,3 +174,5 @@ $( ".entity")
 		
 	});
 
+// Submitting edit form
+editWindow.form.element.submit( editWindow.form.Submit );

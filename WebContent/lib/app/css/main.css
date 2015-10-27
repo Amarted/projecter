@@ -15,12 +15,12 @@ nav li a:hover {
 .description {
 	color: #333;
 }
-.entity .name a {
+.entity .name {
 	text-decoration: none;
 }
 
 
-.entity .name a:hover {
+.entity .name:hover {
 	
 	text-decoration: underline;
 }

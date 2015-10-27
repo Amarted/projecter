@@ -48,15 +48,20 @@ public class Source extends Database {
 	 * Save the new project in database
 	 * @param project
 	 * @throws SQLException
+	 * @return int Inserted id
 	 */
-	public static void createProject( Project project ) throws SQLException {
+	public static int createProject( Project project ) throws SQLException {
 		Connection db = getConnection();
 		String sql = "INSERT INTO projects(name, description) VALUES(?, ?)";		
 		
-		try ( PreparedStatement  createCommand = db.prepareStatement(sql) ) {
+		try ( PreparedStatement  createCommand = db.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS) ) {
 			createCommand.setString( 1, project.getName() );
 			createCommand.setString( 2, project.getDescription() );
 			createCommand.executeUpdate();
+			// Get generated Id
+			ResultSet keys = createCommand.getGeneratedKeys();
+			keys.next();
+			return keys.getInt(1);
 		}
 	}
 
@@ -68,6 +73,19 @@ public class Source extends Database {
 			createCommand.setInt( 1, id );
 			createCommand.executeUpdate();
 		}		
+	}
+
+	public static void saveProject(Project project) throws SQLException  {
+		Connection db = getConnection();
+		String sql = "UPDATE projects SET name = ?, description = ? WHERE id = ?";		
+		
+		try ( PreparedStatement  createCommand = db.prepareStatement(sql) ) {
+			createCommand.setString( 1, project.getName() );
+			createCommand.setString( 2, project.getDescription() );
+			createCommand.setInt( 3, project.getId() );
+			createCommand.executeUpdate();
+		}
+		
 	}
 
 }
