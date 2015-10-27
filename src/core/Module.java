@@ -10,6 +10,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
@@ -142,13 +144,14 @@ public class Module extends HttpServlet implements Servlet {
 			core.App.log(exc);
 		}
 	}
-	
-	protected void ajaxResponse( String status, Object data ) {
-		/**
-		 * Formate json string from object
-		 * For this get all object fields and join they as "name":"value" pairs
-		 */
-		String objectJson = "";
+
+	/**
+	 * Formate json string from object
+	 * For this get all object fields and join they as "name":"value" pairs
+	 * @return String json
+	 */
+	private String toJson( Object data ) {
+		String jsonObject = "";
 		Field[] fields = data.getClass().getDeclaredFields();
 		int fieldsLength = fields.length;
 		for ( int i = 0; i < fieldsLength; i++ ) {
@@ -164,8 +167,7 @@ public class Module extends HttpServlet implements Servlet {
 					if ( fieldName.startsWith("_") ) {
 						fieldName = fieldName.replaceFirst("_", "");
 					}
-			    	objectJson += "\"" + fieldName + "\":" + "\"" + value + "\", ";
-			    	
+			    	jsonObject += "\"" + fieldName + "\":" + "\"" + value + "\", ";			    	
 			    }
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
@@ -174,14 +176,38 @@ public class Module extends HttpServlet implements Servlet {
 				// TODO Auto-generated catch block
 				sendError(e);
 			} 
-		    
+		}		
+		
+		// TODO escape quotes for json ?
+		
+		// Remove last comma and space
+		jsonObject = jsonObject.replaceAll(", $","");
+		// Wrap to bracers
+		jsonObject = "{" + jsonObject + "}";
+		
+		return jsonObject;
+	}
+	
+	protected void ajaxResponse( String status, List<?> dataList ) {
+		String jsonObjects = "";
+		for ( Iterator<?> iter = dataList.listIterator(); iter.hasNext(); ) {
+			Object obj= iter.next();
+			jsonObjects += toJson( obj );
+			jsonObjects += ", ";
 		}
 		// Remove last comma and space
-		objectJson = objectJson.replaceAll(", $","");
+		jsonObjects = jsonObjects.replaceAll(", $","");
+		// Wrap to bracers
+		jsonObjects = "[" + jsonObjects + "]";
 		
-		// TODO escape quotes for json
+		String json = "{\"status\":\"" + status + "\", " + "\"data\":" + jsonObjects + "}";
+		response(json);
+	}
+	
+	protected void ajaxResponse( String status, Object data ) {
+		String jsonObject = toJson(data);	
 		
-		String json = "{\"status\":\"" + status + "\", " + "\"data\":{" + objectJson + "}}";		
+		String json = "{\"status\":\"" + status + "\", " + "\"data\":" + jsonObject + "}";		
 		response(json);
 	}
 	
