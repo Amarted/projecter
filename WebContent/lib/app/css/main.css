@@ -25,11 +25,14 @@ nav li a:hover {
 	text-decoration: underline;
 }
 .entity.current {
-    background-color: #f3f3f3;
+    background-color: #f3f3ff;
 }
 
-.window.hide {
-	display: none;
+.icon {
+	color: #225;
+}
+.icon:hover {
+	color: #44a;
 }
 
 button, .button {
@@ -41,5 +44,9 @@ button, .button {
     cursor: pointer;
 }
 button:hover, .button:hover {
-    background-color: #e8e8e8;
+    background-color: #fafaff;
+}
+
+button:hover .icon, .button:hover .icon {
+	color: #44a;
 }
