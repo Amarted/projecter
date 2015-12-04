@@ -23,8 +23,8 @@ projectsList.Add = function( project ) {
 	templ += '	<div class="data">';
 	templ += '		<input class="id" type="hidden" name="id" value="' + project.id + '" />';
 	templ += '	</div>';
-	templ += '	<button class="edit" title="Редактировать"><span class="glyphicon glyphicon-pencil"></span></button>';
-	templ += '	<button class="delete" type="submit" title="Удалить"><span class="glyphicon glyphicon-remove"></span></button>	';				
+	templ += '	<button class="edit" title="Редактировать"><span class="icon glyphicon glyphicon-pencil"></span></button>';
+	templ += '	<button class="delete" type="submit" title="Удалить"><span class="icon glyphicon glyphicon-remove"></span></button>	';				
 	templ += '	</td>';
 	templ += '</tr>';
 	var row = $( templ );
@@ -77,13 +77,13 @@ editWindow.form = {
 	}
 };
 // Set form element, status, buttons. etc
-editWindow.form.element =  editWindow.form.container.find("form");
+editWindow.form.element =  editWindow.form.container.find(".content");
 editWindow.form.status = editWindow.form.statuses.CREATE;
 editWindow.form.buttons = {
 	submit: editWindow.form.container.find(".controls .submit")
 }
 // Create form data structure
-editWindow.form.data = new App.Class.Structure($("#editProject form") , projectFields);
+editWindow.form.data = new App.Class.Structure($("#editProject .content") , projectFields);
 
 /** Submit method */
 editWindow.form.Submit = function() {
@@ -148,7 +148,7 @@ $( "#create").on( "click", function( event ) {
 $( "#projects .list")	
 	// Edit project
 	.on( "click", ".edit", function( event ) {		
-		var entityRow = $( event.target ).parents( "tr" );			
+		var entityRow = $( event.target ).parents( "tr" );	
 		// Deselect current row
 		$("#projects .list .current").removeClass("current");	
 		// Masrk as current
@@ -156,6 +156,7 @@ $( "#projects .list")
 		projectsList.currentRow = entityRow;
 		// Create new entity structure
 		var entity = new App.Class.Structure( entityRow, projectFields );	
+		console.log(entity)
 		editWindow.form.data.SetAllData( entity.GetAllData() );
 		// Configure and show window
 		editWindow.SetTitle("Редактирование проекта");
@@ -174,4 +175,4 @@ $( "#projects .list")
 	});
 
 // Submitting edit form
-editWindow.form.element.submit( editWindow.form.Submit );
+editWindow.form.element.on('click', 'button.submit', editWindow.form.Submit );
