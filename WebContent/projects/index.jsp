@@ -12,7 +12,7 @@
 	<tbody class="list"></tbody>
 </table>
 
-<button class="btn" id="create"><span class="glyphicon glyphicon-plus"></span> Создать проект</button>
+<button id="create"><span class="icon glyphicon glyphicon-plus"></span> Создать проект</button>
 
 <jsp:include page="project-form.jsp" />	
 <script src="${appBase}lib/app/js/classes/form.class.js"></script>
