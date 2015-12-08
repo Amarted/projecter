@@ -77,13 +77,13 @@ editWindow.form = {
 	}
 };
 // Set form element, status, buttons. etc
-editWindow.form.element =  editWindow.form.container.find(".content");
+editWindow.form.element =  editWindow.form.container.find(".window-content");
 editWindow.form.status = editWindow.form.statuses.CREATE;
 editWindow.form.buttons = {
-	submit: editWindow.form.container.find(".controls .submit")
+	submit: editWindow.form.container.find(".window-controls .submit")
 }
 // Create form data structure
-editWindow.form.data = new App.Class.Structure($("#editProject .content") , projectFields);
+editWindow.form.data = new App.Class.Structure($("#editProject .window-content") , projectFields);
 
 /** Submit method */
 editWindow.form.Submit = function() {
@@ -100,7 +100,7 @@ editWindow.form.Submit = function() {
 	// Deselect current row, clear and close form
 	$("#projects .list .current").removeClass("current");
 	editWindow.form.data.SetAllData( clearProjectData );
-	editWindow.Hide();
+	editWindow.Close();
 	// Prevent default submitiing
 	return false;
 }
@@ -141,7 +141,7 @@ $( "#create").on( "click", function( event ) {
 	editWindow.form.buttons.submit.text( "Создать" );
 	editWindow.form.status = editWindow.form.statuses.CREATE;
 	
-	editWindow.Show();
+	editWindow.Open()();
 })
 
 // Operations
@@ -162,7 +162,7 @@ $( "#projects .list")
 		editWindow.SetTitle("Редактирование проекта");
 		editWindow.form.buttons.submit.text( "Сохранить" );
 		editWindow.form.status = editWindow.form.statuses.EDIT;
-		editWindow.Show();
+		editWindow.Open();
 	})
 	// Delete project
 	.on( "click", ".delete", function( event ) {

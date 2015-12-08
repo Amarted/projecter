@@ -6,10 +6,14 @@ App.Class.Window = function( id, fromTemplate ) {
 	
 	var 
 	_ = this;
-	_element = null;	
+	_window = null;	
 	_head = null;
 	_title = null;
-	_body = null;
+	_content = null;
+	_controls = null;
+	_buttons = {
+			close: null
+	}
 	
 	/** Constructor */
 	_.Init = function() {
@@ -26,33 +30,36 @@ App.Class.Window = function( id, fromTemplate ) {
 		// Window start
 		var window = '<div id="' + id + '" class="window">';
 		// Head of window
-		window += '	<div class="head">';
-		window += '		<div class="title"></div>';	
-		window += '		<div class="controls"></div>';	
+		window += '	<div class="window-head">';
+		window += '		<div class="window-title"></div>';	
+		window += '		<div class="window-controls"></div>';	
 		window += '</div>';
 		// Window body
-		window += '	<div class="body"></div>';		
+		window += '	<div class="window-content"></div>';		
 		// Window end
 		window += '</div>';
 		
 		
 		$("body").append( window );
-		_SetControls( '#' + id );
+		_InitElements( '#' + id );
+		_InitEvents();
 	}
 	
 	_.CreateFromTemplate = function( templateId ) {
-		_SetControls( '#' + templateId );
+		_InitElements( '#' + templateId );
+		_InitEvents();
 	}	
 	
 	
 	/** Display mehtods  */
-	_.Show = function() { _element.show(); };
-	_.Hide = function() { _element.hide(); };	
+	_.Open = function() { _window.show(); };
+	_.Close = function() { _window.hide();
+	console.log(_window) };	
 	
-	/** Set window body */
-	_.SetBody = function( content ) {
+	/** Set window content */
+	_.SetContent = function( content ) {
 		$( function() {
-			_body.html( content );
+			_content.html( content );
 		});
 	}
 	/** Set window title */
@@ -61,26 +68,42 @@ App.Class.Window = function( id, fromTemplate ) {
 			_title.html( content );
 		});
 	}
+	
+	// Window size
 	_.SetHeight = function( height, unit ) {
 		if ( ! unit ) unit = 'px';
 		$(function(){
-			_body.css({height: height + unit});
+			_content.css({height: height + unit});
 		});
 	}
-
 	_.SetWidth = function( width, unit ) {
 		if ( ! unit ) unit = 'px';
 		$(function(){
-			_body.css({width: width + unit});
+			_content.css({width: width + unit});
 		});
+	}
+	_.SetSize = function( width, height, unit ) {
+		_.SetHeight( height, unit );
+		_.SetWidth( width, unit );
+		
 	}
 	
 	/** Set body, footer and other modal elements */
-	_SetControls = function( id ) {
-		_element = $( id );
-		_head = _element.find( '.head' );
-		_title = _head.find( '.title' );
-		_body = _element.find( '.body' );
+	_InitElements = function( id ) {
+		_window = $( id );
+		console.log(_window)
+		_head = _window.find( '.window-head' );
+		_title = _head.find( '.window-title' );
+		_controls = _head.find( '.window-controls' );
+		_content = _window.find( '.window-content' );
+		_buttons.close = _controls.find('.window-control.close');
+	}
+	
+	_InitEvents = function() {
+		console.log(2)
+		_buttons.close.on('click', null, function(){
+			_.Close();
+		})
 	}
 	
 	_.Init();

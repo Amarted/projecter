@@ -1,15 +1,15 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 
 <div id="editProject" class="window hide">
-	<div class="head">
-		<div class="title">Новый проект</div>
-		<div class="controls">
-			<span class="control close">
+	<div class="window-head">
+		<div class="window-title">Новый проект</div>
+		<div class="window-controls">
+			<span class="window-control close">
 				<span class="icon glyphicon glyphicon-remove"></span>
 			</span>
 		</div>
 	</div>
-	<div class="content">
+	<div class="window-content">
 		<div class="input">
 			<lable>Проект</lable>
 			<input class="name" type="text" name="name" maxlength="45" required />

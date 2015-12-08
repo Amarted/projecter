@@ -1,37 +1,37 @@
 
 .window {
 	position: absolute;
-	top: 10%;
-	left: 30%;
+	top: 5%;
+	left: 15%;
 	background-color: white;
     padding: 2px;
 	border: 1px solid lightgray;
     box-shadow: 2px 2px 7px gray;
 }
-.window > .head {
+.window > .window-head {
 	height: 17px;
     padding-left: 4px;
 }
 
-.window > .head > .title {
+.window > .window-head > .window-title {
 	height: 15px;
 	float: left;
 	width: 85%;
 	font-size: 16px;
 }
 
-.window > .head > .controls {
+.window > .window-head > .window-controls {
 	width: 15%;
 	float: right;
 	text-align: right;
 }
 	
-.window > .head > .controls > .control {
+.window > .window-head > .window-controls > .window-control {
 	font-size: 12px;
 	cursor: pointer;
 }
 
-.window > .content {
+.window > .window-content {
 	background-color: #fbfbfd;	
 	width: auto;
 	height: auto;
@@ -39,16 +39,16 @@
 	padding: 5px;
 }
 
-.window > .content .input lable {
+.window > .window-content .input lable {
     width: 160px;
     display: inline-block;
 }
 
-.window > .content .input {
+.window > .window-content .input {
 	margin-bottom: 5px;
 }
 
-.window> .content .input input {
+.window> .window-content .input input {
 	height: 20px;
 }
 
