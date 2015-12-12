@@ -21,6 +21,12 @@
 	<script type="text/javascript" src="${appBase}lib/third/jquery.min.js"></script>
 	<script type="text/javascript" src="${appBase}lib/app/js/core.js"></script>
 	<script type="text/javascript" src="${appBase}lib/app/js/app.js"></script>
+	<script type="text/javascript" src="${appBase}lib/app/js/classes/position.class.js"></script>
+	<script type="text/javascript" src="${appBase}lib/app/js/classes/resolution.class.js"></script>
+	<script type="text/javascript" src="${appBase}lib/app/js/classes/window.class.js"></script>
+	<script type="text/javascript" src="${appBase}lib/app/js/classes/form.class.js"></script>
+	<script type="text/javascript" src="${appBase}lib/app/js/classes/structure.class.js"></script>
+	<script type="text/javascript" src="${appBase}lib/app/js/classes/windows.manager.class.js"></script>
 	<jsp:include page="/${viewFile}" />	
 </body>
 </html>

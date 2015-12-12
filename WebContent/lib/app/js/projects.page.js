@@ -4,7 +4,7 @@
 
 var projectFields = [ "id", "name", "description" ];
 var clearProjectData = { id: null, name: "", description: "" };
-var editWindow = new App.Class.Window( "editProject", true );
+var editWindow = new App.Class.Window( "editProject", new App.Class.Resolution(300, 200),  new App.Class.Position(10, 10), App.FROM_TEMPLATE );
 var projectsList = { 
 	element: $( "#projects .list" ),
 	currentRow: null
@@ -141,7 +141,7 @@ $( "#create").on( "click", function( event ) {
 	editWindow.form.buttons.submit.text( "Создать" );
 	editWindow.form.status = editWindow.form.statuses.CREATE;
 	
-	editWindow.Open()();
+	editWindow.Open();
 })
 
 // Operations
@@ -151,12 +151,11 @@ $( "#projects .list")
 		var entityRow = $( event.target ).parents( "tr" );	
 		// Deselect current row
 		$("#projects .list .current").removeClass("current");	
-		// Masrk as current
+		// Mark as current
 		entityRow.addClass('current');		
 		projectsList.currentRow = entityRow;
 		// Create new entity structure
-		var entity = new App.Class.Structure( entityRow, projectFields );	
-		console.log(entity)
+		var entity = new App.Class.Structure( entityRow, projectFields );
 		editWindow.form.data.SetAllData( entity.GetAllData() );
 		// Configure and show window
 		editWindow.SetTitle("Редактирование проекта");

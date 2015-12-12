@@ -1,7 +1,17 @@
+/**
+ * Core classes, methods and variables.
+ */
 var AppClass = function() {
+	
 	var _ = this;
+	
+	// App constants
+	_.FROM_TEMPLATE = "from_template";	
 	_.Base = "/Projecter.local/";
+	
+	// All app classes must be defined in App.Class namespace
 	_.Class = {};
+	
 	_.Request = function( url, data, method ) {
 		return $.ajax({
 			url: url,
@@ -26,7 +36,7 @@ var AppClass = function() {
 		});
 	}
 	/**
-	 * params: message, type, where, clear, autoremove
+	 * params: {message, type, where, clear, autoremove}
 	 */
 	_.ShowMessage = function( params ) {
 		if ( !  params.message ) {

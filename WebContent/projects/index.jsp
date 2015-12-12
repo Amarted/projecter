@@ -15,7 +15,4 @@
 <button id="create"><span class="icon glyphicon glyphicon-plus"></span> Создать проект</button>
 
 <jsp:include page="project-form.jsp" />	
-<script src="${appBase}lib/app/js/classes/form.class.js"></script>
-<script src="${appBase}lib/app/js/classes/window.class.js"></script>
-<script src="${appBase}lib/app/js/classes/structure.class.js"></script>
 <script src="${appBase}lib/app/js/projects.page.js"></script>
